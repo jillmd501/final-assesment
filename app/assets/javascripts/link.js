@@ -1,70 +1,98 @@
-function Link(data) {
-  this.id = data.id;
-  this.title = data.title;
-  this.url = data.url;
-  this.read = data.read;
+$(document).ready(function(){
+    fetchLinks();
+    deleteLink();
+    editLink();
+    searchLinks();
+});
 
-  this.render().bindEvents();
+function renderLinks(link) {
+  $("#latest-links").prepend(
+    "<div class='link' id='link-id-" + link.id + "' data-id='" + link.id + "'> " +
+      "<h4>" + link.title + "</h4>" +
+      "<h4>" + link.url + "</h4>" +
+      "<h5 contentEditable=false>Read yet? (t/f):   " + link.read + "</h5>" +
+      "<div class='btn blue' id='delete-link'>Delete</div>" +
+      "<div class='btn blue' id='edit-link'>Edit</div>" +
+      "<div class='btn blue' id='save-link'>Save</div>" +
+    "</div>"
+    )
+  }
+
+function fetchLinks() {
+  var newestLinkID = parseInt($(".link").last().attr("data-id"))
+  $.ajax({
+    type:    "GET",
+    url:     "/api/v1/links.json",
+    success: function(links) {
+      $.each(links, function(index, link) {
+        if (isNaN(newestLinkID) || link.id > newestLinkID) {
+          renderLinks(link)
+        }
+      })
+    },
+    error: function(xhr) {
+      console.log(xhr.responseText)
+    }
+  })
 }
 
-Link.prototype.promote = function () {
-  if (this.read === 'unread') { this.quality = 'read'; }
-  return this.update();
-};
+  function deleteLink() {
+    $('#latest-links').on('click', '#delete-link', function() {
+      var $link = $(this).closest('.link')
+      $.ajax({
+        type: 'DELETE',
+        url:  '/api/v1/links/' + $link.attr("data-id") + '.json',
+        success: function(){
+          $link.remove()
+        },
+        error: function(){
+          $link.remove()
+          console.log('Sorry, link has already deleted.')
+        }
+      })
+    })
+  }
 
-Link.prototype.demote = function () {
-  if (this.quality === 'read') { this.quality = 'unread'; }
-  return this.update();
-};
 
-Link.prototype.delete = function () {
-  $.ajax({
-    method: 'DELETE',
-    url: '/api/v1/links/' + this.id
-  }).then(function () {
-    this.element.remove();
-  }.bind(this));
-};
+  function editLink() {
+    $('#latest-links').on('click','#edit-link', function() {
+      var $link = $(this).closest(".link");
+      document.getElementById("link-id-" + $link.attr('data-id')).contentEditable = true;
+      $("#save-link").click(function(){
+        document.getElementById("link-id-" + $link.attr('data-id')).contentEditable = false;
+        $("#save-link").disable();
+        var linkParams = {
+          link: {
+            id: $link.attr('data-id'),
+            title: $("#link-id-" + $link.attr('data-id')).text(),
+            body: $("#link-id-" + $link.attr('data-id')).text()
+          }
+        }
 
-Link.prototype.update = function () {
-  return $.ajax({
-    method: 'PUT',
-    url: '/api/v1/links/' + this.id,
-    data: this.toJSON()
-  });
-};
+        $.ajax({
+          type: 'PUT',
+          url: '/api/v1/links/' + $link.attr('data-id'),
+          data: linkParams,
+          success: function() {
+            fetchLinks();
+          },
+          error: function(xhr) {
+            console.log(xhr.responseText)
+          }
+        });
+      });
+    });
+  };
 
-Link.prototype.render = function () {
-  this.element = $(linkTemplate(this));
-  return this;
-};
-
-Link.prototype.rerender = function () {
-  this.element.replaceWith(this.render().bindEvents().element);
-  return this;
-};
-
-Link.prototype.prependTo = function (target) {
-  this.element.prependTo(target);
-  return this;
-};
-
-Link.prototype.toJSON = function () {
-  return { link: _.pick(this, ['title', 'url', 'read']) };
-};
-
-Link.prototype.bindEvents = function () {
-  this.element.find('.link-delete').on('click', function () {
-    this.delete();
-  }.bind(this));
-
-  this.element.find('.link-promote').on('click', function () {
-    this.promote().then(this.rerender.bind(this));
-  }.bind(this));
-
-  this.element.find('.link-demote').on('click', function () {
-    this.demote().then(this.rerender.bind(this));
-  }.bind(this));
-
-  return this;
-};
+  function searchLinks() {
+  $("#filter").keyup(function(){
+		var filter = $(this).val();
+		$("#latest-links").children().each(function(){
+			if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+				$(this).fadeOut();
+			} else {
+				$(this).show();
+			}
+		});
+	});
+}

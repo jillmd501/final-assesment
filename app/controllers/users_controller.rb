@@ -8,7 +8,8 @@ class UsersController < ApplicationController
         session[:user_id] = @user.id
         redirect_to @user #assumes you want to see the show page
       else
-        #implement later
+        flash.now[:error] = "Please enter valid info"
+        render :new
       end
   end
 

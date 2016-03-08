@@ -15,6 +15,23 @@
       </form>
     </section>
 
-    <section class="links"></section>
-  <div class="links"></div>
+<table class="centered">
+    <thead>
+        <tr>Title</th>
+        <th>Link</th>
+        <th>Edit</th>
+        <th>Read?</th>
+      </tr>
+    </thead>
+    <tbody id="link-index">
+      <% @links.each do |link| %>
+      <tr id="link-<%=link.id%>">
+        <th class="center link-title"><%= link.title %></th>
+        <th class="center"> <a href="<%=link.url%>">Link</a></th>
+        <th class="center"> <a href="<%=edit_link_path(link)%>">Edit</a></th>
+        <th class="center read-status" id="<%=link.id%>-edit-read"><%= link.read.to_s %></th>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

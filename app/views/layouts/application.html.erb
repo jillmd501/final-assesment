@@ -7,9 +7,16 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <% flash.each do |type, msg| %>
+    <%= content_tag :p, sanitize(msg), class: 'hidden' %>
+    <div class="flash_<%= type %>">
+    </div>
+  <% end %>
+
+
   <nav>
     <div class="nav-wrapper">
-      <%= link_to "THE BIG ONE", root_path, class: "brand-logo center", id: "logo" %>
+      <%= link_to "Final Countdown", root_path, class: "brand-logo center", id: "logo" %>
       <ul class="right hide-on-med-and-down">
         <% if current_user %>
           <li><%= link_to "Logout", logout_path, method: :delete %></li>
@@ -22,9 +29,15 @@
     </div>
   </nav>
 
-  <% if current_user %>
-    <h3 class='center'> Welcome, <%= current_user.username %>! </h3>
-  <% end %>
+  <div class="container">
+      <% flash.each do |type, msg| %>
+      <div class="card">
+        <p>
+          <center style='color:yellow'><%= content_tag :div, msg.html_safe %></center>
+        </p>
+      </div>
+      <% end %>
+  </div>
 
 <%= yield %>
 
