@@ -13,3 +13,9 @@ class ActionDispatch::IntegrationTest
     reset_session!
   end
 end
+
+class ActionController::TestCase
+  def json_response
+    JSON.parse response.body
+  end
+end
