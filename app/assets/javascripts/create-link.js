@@ -1,8 +1,9 @@
-var newLinkTitle, newLinkUrl;
+var newLinkTitle, newLinkUrl; errorMessages;
 
 $(document).ready(function () {
   newLinkTitle = $('.new-link-title');
   newLinkUrl = $('.new-link-url');
+  errorMessages = $('.new-idea-messages');
 
   $('.new-link-submit').on('click', createLink);
 });
@@ -10,18 +11,23 @@ $(document).ready(function () {
 function createLink(event) {
   event.preventDefault();
   clearErrors();
-  IdeaRepository.create(getNewLink())
-              .then(prependLinkToContainer)
+  LinkRepository.create(getNewLink())
+                .then(prependLinkToContainer)
                 .fail(renderError);
 }
 
-function clearErrors() {
-  return errorMessages.html('');
-}
 
 function getNewLink() {
   return {
     title: newLinkTitle.val(),
     url: newLinkUrl.val()
   };
+}
+
+function clearErrors() {
+  return errorMessages.html('');
+}
+
+function renderError() {
+  errorMessages.text('Title and/or URL cannot be blank.');
 }
