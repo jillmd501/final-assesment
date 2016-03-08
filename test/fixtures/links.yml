@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  url: MyString
-  read: 1
+  title: Google
+  url: https://www.google.com
+  read: read
 
 two:
-  title: MyString
-  url: MyString
-  read: 1
+  title: Yahoo
+  url: https://www.yahoo.com/
+  read: unread
