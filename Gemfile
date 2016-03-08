@@ -12,6 +12,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.7'
 gem 'pg'
 gem 'materialize-sass'
+gem "validate_url"
 
 group :development do
   gem 'byebug'
