@@ -1,5 +1,4 @@
 class Link < ActiveRecord::Base
   validates :title, :url, presence: true
-
-  enum read: [:unread, :read]
+  validates :read, inclusion: { in: %w(unread read) }
 end

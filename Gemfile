@@ -14,6 +14,7 @@ gem 'pg'
 gem 'materialize-sass'
 gem "validate_url"
 gem 'responders'
+gem 'lodash-rails'
 
 group :development do
   gem 'byebug'

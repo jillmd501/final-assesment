@@ -3,9 +3,9 @@
 one:
   title: Google
   url: https://www.google.com
-  read: 1
+  read: read
 
 two:
   title: Yahoo
   url: https://www.yahoo.com/
-  read: 0
+  read: unread

@@ -25,11 +25,16 @@ class Api::V1::LinksController < ApplicationController
     else
       render json: link.errors, status: 422
     end
-end
+  end
+
+  def destroy
+    Link.find(params[:id]).destroy
+    head :no_content
+  end
 
 private
 
   def link_params
-    params.require(:link).permit(:url, :title)
+    params.require(:link).permit(:url, :title, :read)
   end
 end

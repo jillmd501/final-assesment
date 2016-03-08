@@ -65,5 +65,4 @@ class Api::V1::LinksControllerTest < ActionController::TestCase
     assert_response 422
     assert_includes json_response["errors"]["url"], "can't be blank"
   end
-
 end
