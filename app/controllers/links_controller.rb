@@ -1,4 +1,5 @@
 class LinksController < ApplicationController
+
   def index
     @links = current_user.links
   end
@@ -32,6 +33,12 @@ class LinksController < ApplicationController
       flash.now[:errors] = "A link must have a title and url"
       render :edit
     end
+  end
+
+  def destroy
+    Link.delete(params[:id])
+    flash[:messages] = "Link Deleted"
+    redirect_to links_path
   end
 
   private
