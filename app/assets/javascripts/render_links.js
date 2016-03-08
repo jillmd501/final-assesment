@@ -3,8 +3,8 @@ var linksContainer;
 $(document).ready(function () {
   linksContainer = $('.links');
   LinkRepository.all()
-                .then(renderIdeas)
-                .then(prependIdeasToContainer);
+                .then(renderLinks)
+                .then(prependLinksToContainer);
 });
 
 function prependLinkToContainer(link) {
@@ -21,18 +21,26 @@ function renderLinks(links) {
   return links;
 }
 
-function renderLink(link) {
-  link.render = function () {
-    this.element = $(linkTemplate(this));
-    return this;
+function renderLink(idea) {
+  idea.render = function () {
+    idea.element = $(ideaTemplate(idea));
+    return idea;
   };
 
-  link.prependTo = function (target) {
-    this.element.prependTo(target);
-    return this;
+  idea.prependTo = function (target) {
+    idea.element.prependTo(target);
+    return idea;
   };
-  def create_link
-    Link.create(title: "Graduation", url: "http://www.imouttahere.com")
-  end
-  return link.render();
+
+  idea.delete = deleteLink;
+
+  idea.bindEvents = function () {
+    idea.element.find('.idea-delete').on('click', function () {
+      idea.delete();
+    });
+
+    return idea;
+  };
+
+  return idea.render().bindEvents();
 }

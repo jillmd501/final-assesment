@@ -11,6 +11,7 @@ function createLink(event) {
   event.preventDefault();
   clearErrors();
   IdeaRepository.create(getNewLink())
+              .then(prependLinkToContainer)
                 .fail(renderError);
 }
 
