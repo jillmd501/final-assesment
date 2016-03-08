@@ -14,3 +14,13 @@ function updateLink() {
     data: this.toJSON()
   });
 }
+
+function promoteLink() {
+  if (this.quality === 'unread') { this.quality = 'read'; }
+  return this.update();
+}
+
+function demoteLink() {
+  if (this.quality === 'read') { this.quality = 'unread'; }
+  return this.update();
+}
